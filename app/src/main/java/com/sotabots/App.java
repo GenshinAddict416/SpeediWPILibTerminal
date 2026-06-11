@@ -65,6 +65,7 @@ public class App {
                         printstr("!cd [directory]  - Change the current directory");
                         printstr("!ls              - List files and folders in the current directory");
                         printstr("!run [filename]  - Compile and execute a source file (.java, .cpp, .py, .js, .jar, .bat, .sh)");
+                        printstr("!robotbuild      - Build the robot code");
                         printstr("!robotsim        - Launch the robot simulation");
                         printstr("!robotcode       - Build and deploy the robot code");
                         printstr("!time            - Display the current time");
