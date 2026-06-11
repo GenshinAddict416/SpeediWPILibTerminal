@@ -5,17 +5,26 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
   build:
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            label: Linux
+            tag_prefix: linux
+          - os: macos-latest
+            label: Mac
+            tag_prefix: mac
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           java-version: '21'
           distribution: 'temurin'
@@ -27,23 +36,16 @@ jobs:
       - name: Build
         run: ./gradlew clean jpackageImage --no-configuration-cache
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: SpeedyTerminal-${{ runner.os }}
-          path: build/jpackage/
+      - name: Find and zip output
+        run: |
+          find . -type d -name "jpackage" 
+          cd $(find . -type d -name "jpackage")
+          zip -r ${{ github.workspace }}/${{ matrix.label }}-app.zip .
+        shell: bash
 
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts/
-
-      - name: Create GitHub Release
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          files: artifacts/**/*
+          tag_name: ${{ matrix.tag_prefix }}-${{ github.ref_name }}
+          name: ${{ matrix.label }} ${{ github.ref_name }}
+          files: ${{ matrix.label }}-app.zip
