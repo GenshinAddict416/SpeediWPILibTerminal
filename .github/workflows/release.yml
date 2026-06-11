@@ -18,13 +18,10 @@ jobs:
         include:
           - os: windows-latest
             label: Windows
-            tag_prefix: win
           - os: ubuntu-latest
             label: Linux
-            tag_prefix: linux
           - os: macos-latest
             label: Mac
-            tag_prefix: mac
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -54,16 +51,30 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           $dir = Get-ChildItem -Recurse -Directory -Filter "jpackage" | Select-Object -First 1 -ExpandProperty FullName
-          Write-Host "Found jpackage at: $dir"
           Compress-Archive -Path "$dir\*" -DestinationPath "${{ matrix.label }}-app.zip"
         shell: pwsh
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: ${{ matrix.label }}-app
+          path: ${{ matrix.label }}-app.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v5
+        with:
+          path: artifacts/
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ matrix.tag_prefix }}-${{ github.ref_name }}
-          name: ${{ matrix.label }} ${{ github.ref_name }}
-          files: ${{ matrix.label }}-app.zip
+          name: ${{ github.ref_name }}
+          files: artifacts/**/*.zip
           body: |
             # SpeediWPILibTerminal
             ### What is this terminal thing?
@@ -71,5 +82,5 @@ jobs:
             ### What am I solving?
             I, an experienced programmer of the SOTABots 2557 team, created this to help with the programming of the robot and of various tools. By using simple shortcuts on top of a shell, a programmer can quickly navigate, build, and deploy code.
             ### How do *I* use it?
-            Download the .zip binaries, extract them, and run the executable.
+            Download the .zip for your OS, extract it, and run the executable.
             Use the !help command to see what to do, or read the README for more extensive support.
