@@ -64,3 +64,12 @@ jobs:
           tag_name: ${{ matrix.tag_prefix }}-${{ github.ref_name }}
           name: ${{ matrix.label }} ${{ github.ref_name }}
           files: ${{ matrix.label }}-app.zip
+          body: |
+            # SpeediWPILibTerminal
+            ### What is this terminal thing?
+            This is a terminal made to help FRC programmers quickly develop code.
+            ### What am I solving?
+            I, an experienced programmer of the SOTABots 2557 team, created this to help with the programming of the robot and of various tools. By using simple shortcuts on top of a shell, a programmer can quickly navigate, build, and deploy code.
+            ### How do *I* use it?
+            Download the .zip binaries, extract them, and run the executable.
+            Use the !help command to see what to do, or read the README for more extensive support.
