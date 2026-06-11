@@ -59,14 +59,18 @@ public class App {
                         printstr(GREEN + "Available commands:");
                         printstr("!help            - Show this help message");
                         printstr("!hello           - Greet the user");
-                        printstr("!echo [text]     - Repeats back the arguments provided");
+                        printstr("!echo [text]     - Repeat back the provided text");
                         printstr("!clear           - Clear the console");
                         printstr("!pwd             - Print the current working directory path");
                         printstr("!cd [directory]  - Change the current directory");
-                        printstr("!run [filename]  - Compile and execute a source file (.java, .cpp, .py, .js)");
+                        printstr("!ls              - List files and folders in the current directory");
+                        printstr("!run [filename]  - Compile and execute a source file (.java, .cpp, .py, .js, .jar, .bat, .sh)");
                         printstr("!time            - Display the current time");
                         printstr("!date            - Display the current date");
-                        printstr("!exit            - Exit the application" + RESET);
+                        printstr("!exit            - Exit the application");
+                        printstr("");
+                        printstr("You can also run files directly without !run:  main.exe, script.py, etc.");
+                        printstr("Unknown commands are passed through to the system shell." + RESET);
                     }
 
                     case "!echo" -> {
