@@ -53,7 +53,9 @@ jobs:
       - name: Zip output (Windows)
         if: runner.os == 'Windows'
         run: |
-          Compress-Archive -Path build\jpackage\* -DestinationPath ${{ matrix.label }}-app.zip
+          $dir = Get-ChildItem -Recurse -Directory -Filter "jpackage" | Select-Object -First 1 -ExpandProperty FullName
+          Write-Host "Found jpackage at: $dir"
+          Compress-Archive -Path "$dir\*" -DestinationPath "${{ matrix.label }}-app.zip"
         shell: pwsh
 
       - name: Create Release
