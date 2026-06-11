@@ -156,6 +156,24 @@ public class App {
                         }
                     }
 
+                    case "!robotbuild" -> {
+                        String[] gradlew = System.getProperty("os.name").toLowerCase().contains("win")
+                            ? new String[]{"cmd", "/c", "gradlew.bat"}
+                            : new String[]{"bash", "gradlew"};
+                        try {
+                            printstr(GREEN + "Building..." + RESET);
+                            Process build = new ProcessBuilder(combineArgs(gradlew, new String[]{"build"}))
+                                .directory(currentDir).inheritIO().start();
+                            if (build.waitFor() == 0) {
+                                printstr(GREEN + "Build successful!" + RESET);  
+                            } else {
+                                System.err.println(RED + "Build failed! Skipping deploy." + RESET);
+                            }
+                        } catch (IOException | InterruptedException e) {
+                            System.err.println(RED + "Error: " + e.getMessage() + RESET);
+                        }
+                    }
+
                     case "!robotcode" -> {
                         String[] gradlew = System.getProperty("os.name").toLowerCase().contains("win")
                             ? new String[]{"cmd", "/c", "gradlew.bat"}
