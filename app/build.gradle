@@ -56,10 +56,8 @@ runtime {
     modules = ['java.base'] 
     
     jpackage {
-        targetPlatformName = 'windows'
-        
-        // Use '--win-console' if this is a Command Line (CLI) application.
-        // Remove this line if you are building a GUI application with windows/panels.
-        imageOptions = ['--win-console'] 
+        imageOptions = System.getProperty('os.name').toLowerCase().contains('win')
+            ? ['--win-console']
+            : []
     }
 }
