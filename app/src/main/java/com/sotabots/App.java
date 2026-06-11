@@ -32,13 +32,13 @@ public class App {
             Thread.currentThread().interrupt();
         }
 
-        printstr(GREEN + "Welcome to the SpeedyTerminal!" + RESET);
+        printstr(GREEN + "Welcome to the Speedi Terminal!" + RESET);
         
         try (Scanner scanner = new Scanner(System.in)) {
             OUTER:
             while (true) {
                 // Prompt showing the active directory folder name
-                System.out.print(CYAN + "(" + currentDir.getName() + ") speedy> " + RESET);
+                System.out.print(CYAN + "(" + currentDir.getName() + ") speedi> " + RESET);
                 System.out.flush();
 
                 String input = scanner.nextLine().trim();
