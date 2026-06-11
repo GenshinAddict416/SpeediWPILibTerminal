@@ -8,6 +8,9 @@ on:
 permissions:
   contents: write
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     strategy:
@@ -39,12 +42,19 @@ jobs:
       - name: Build
         run: ./gradlew clean jpackageImage --no-configuration-cache
 
-      - name: Find and zip output
+      - name: Zip output (Unix)
+        if: runner.os != 'Windows'
         run: |
-          find . -type d -name "jpackage" 
-          cd $(find . -type d -name "jpackage")
+          DIR=$(find . -type d -name "jpackage" | head -1)
+          cd "$DIR"
           zip -r ${{ github.workspace }}/${{ matrix.label }}-app.zip .
         shell: bash
+
+      - name: Zip output (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          Compress-Archive -Path build\jpackage\* -DestinationPath ${{ matrix.label }}-app.zip
+        shell: pwsh
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
