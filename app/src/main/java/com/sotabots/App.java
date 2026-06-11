@@ -65,6 +65,8 @@ public class App {
                         printstr("!cd [directory]  - Change the current directory");
                         printstr("!ls              - List files and folders in the current directory");
                         printstr("!run [filename]  - Compile and execute a source file (.java, .cpp, .py, .js, .jar, .bat, .sh)");
+                        printstr("!robotsim        - Launch the robot simulation");
+                        printstr("!robotcode       - Build and deploy the robot code");
                         printstr("!time            - Display the current time");
                         printstr("!date            - Display the current date");
                         printstr("!exit            - Exit the application");
@@ -151,6 +153,47 @@ public class App {
                             for (File entry : entries) {
                                 printstr(formatEntry(entry));
                             }
+                        }
+                    }
+
+                    case "!robotcode" -> {
+                        String[] gradlew = System.getProperty("os.name").toLowerCase().contains("win")
+                            ? new String[]{"cmd", "/c", "gradlew.bat"}
+                            : new String[]{"bash", "gradlew"};
+                        try {
+                            printstr(GREEN + "Building..." + RESET);
+                            Process build = new ProcessBuilder(combineArgs(gradlew, new String[]{"build"}))
+                                .directory(currentDir).inheritIO().start();
+                            if (build.waitFor() == 0) {
+                                printstr(GREEN + "Deploying..." + RESET);
+                                Process deploy = new ProcessBuilder(combineArgs(gradlew, new String[]{"deploy"}))
+                                    .directory(currentDir).inheritIO().start();
+                                if (deploy.waitFor() == 0) {
+                                    printstr(GREEN + "Deploy successful!" + RESET);
+                                } else {
+                                    System.err.println(RED + "Deploy failed!" + RESET);
+                                }
+                            } else {
+                                System.err.println(RED + "Build failed! Skipping deploy." + RESET);
+                            }
+                        } catch (IOException | InterruptedException e) {
+                            System.err.println(RED + "Error: " + e.getMessage() + RESET);
+                        }
+                    }
+
+                    case "!robotsim" -> {
+                        String[] gradlew = System.getProperty("os.name").toLowerCase().contains("win")
+                            ? new String[]{"cmd", "/c", "gradlew.bat"}
+                            : new String[]{"bash", "gradlew"};
+                        try {
+                            printstr(GREEN + "Launching simulation..." + RESET);
+                            Process sim = new ProcessBuilder(combineArgs(gradlew, new String[]{"simulateJava"}))
+                                .directory(currentDir).inheritIO().start();
+                            if (sim.waitFor() != 0) {
+                                System.err.println(RED + "Simulation failed!" + RESET);
+                            }
+                        } catch (IOException | InterruptedException e) {
+                            System.err.println(RED + "Error: " + e.getMessage() + RESET);
                         }
                     }
                     
