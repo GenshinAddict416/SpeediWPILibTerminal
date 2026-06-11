@@ -81,6 +81,6 @@ jobs:
             This is a terminal made to help FRC programmers quickly develop code.
             ### What am I solving?
             I, an experienced programmer of the SOTABots 2557 team, created this to help with the programming of the robot and of various tools. By using simple shortcuts on top of a shell, a programmer can quickly navigate, build, and deploy code.
-            ### How do *I* use it?
+            ### How do *you* use it?
             Download the .zip for your OS, extract it, and run the executable.
             Use the !help command to see what to do, or read the README for more extensive support.
